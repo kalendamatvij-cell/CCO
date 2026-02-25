@@ -826,6 +826,72 @@
             background: #1d4e6b;
         }
 
+        .profile-section {
+            background: #eef5fa;
+            padding: 25px;
+            border-radius: 24px;
+            margin: 20px 0;
+        }
+        body.dark-mode .profile-section {
+            background: #1f2f3c;
+        }
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .profile-field {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px 15px;
+            background: #d4e0e9;
+            border-radius: 40px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        body.dark-mode .profile-field {
+            background: #2e3f4d;
+        }
+        .profile-field span {
+            font-weight: 600;
+        }
+        .profile-field input {
+            background: white;
+            border: 1px solid #b0c4d9;
+            padding: 5px 10px;
+            border-radius: 30px;
+            width: 60%;
+        }
+        body.dark-mode .profile-field input {
+            background: #1e2933;
+            color: #e0e0e0;
+            border-color: #506479;
+        }
+        .save-profile-btn {
+            background: #0a2a3a;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .delete-account-btn {
+            background: #a12a2a;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .delete-account-btn:hover {
+            background: #7a1f1f;
+        }
+
         footer {
             background: #0a2a3a;
             color: #bbd0e3;
@@ -855,6 +921,52 @@
             background: rgba(255,255,255,0.2);
             transform: scale(1.05);
         }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .small-greeting {
+            font-size: 0.9rem;
+            color: #0a2a3a;
+            background: #f0f6fc;
+            padding: 8px 15px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        body.dark-mode .small-greeting {
+            background: #1f2f3c;
+            color: #ffc107;
+        }
+
+        /* Стилі для таблиці заявок */
+        .requests-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        .requests-table th, .requests-table td {
+            border: 1px solid #b0c4d9;
+            padding: 10px;
+            text-align: left;
+        }
+        .requests-table th {
+            background: #0a2a3a;
+            color: white;
+        }
+        .requests-table button {
+            background: #0a2a3a;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .requests-table button:hover {
+            background: #1d4e6b;
+        }
     </style>
 </head>
 <body>
@@ -872,25 +984,49 @@
             <input type="text" id="searchInput" placeholder="Пошук за текстом активної вкладки...">
         </div>
 
-        <!-- Панель реєстрації -->
+        <!-- Панель авторизації (оновлена) -->
         <div class="auth-panel" id="authPanel">
-            <div class="auth-form" id="authForm">
-                <input type="email" id="loginName" placeholder="Email" value="" required>
-                <input type="password" id="loginPass" placeholder="Пароль" value="" required>
+            <!-- Кнопки для вибору дії (видно тільки коли не залогінені) -->
+            <div id="authChoice" class="auth-buttons">
+                <button class="auth-btn" id="showLoginBtn">🔑 Власний кабінет</button>
+                <button class="auth-btn secondary" id="showRegisterBtn">📝 Реєстрація</button>
+            </div>
+
+            <!-- Форма входу (прихована спочатку) -->
+            <div id="loginForm" class="auth-form hidden">
+                <input type="email" id="loginEmail" placeholder="Email" value="">
+                <input type="password" id="loginPassword" placeholder="Пароль" value="">
+                <button class="auth-btn" id="doLoginBtn">Увійти</button>
+                <button class="auth-btn secondary" id="backFromLogin">Назад</button>
+            </div>
+
+            <!-- Форма реєстрації (прихована спочатку) -->
+            <div id="registerForm" class="auth-form hidden">
+                <input type="email" id="regEmail" placeholder="Email" value="">
+                <input type="password" id="regPassword" placeholder="Пароль" value="">
                 <input type="text" id="regNick" placeholder="Нік в грі" value="">
                 <input type="text" id="regGameId" placeholder="ID в грі" value="">
-                <input type="text" id="regRank" placeholder="Звання" value="">
+                <input type="text" id="regGameRank" placeholder="Звання" value="">
                 <input type="text" id="regDiscord" placeholder="Дискорд" value="">
+                <button class="auth-btn" id="doRegisterBtn">Зареєструватися</button>
+                <button class="auth-btn secondary" id="backFromRegister">Назад</button>
             </div>
-            <div class="auth-buttons" id="authButtons">
-                <button class="auth-btn" id="loginBtn">Увійти</button>
-                <button class="auth-btn secondary" id="registerBtn">Зареєструватися</button>
-            </div>
-            <div class="auth-message" id="authMessage">👋 Ви не авторизовані</div>
-            <div class="user-info" id="userInfo" style="display: none;">
+
+            <!-- Інформація про поточного користувача (видно коли залогінені) -->
+            <div id="userInfo" class="user-info hidden">
                 <span id="userNameDisplay"></span>
                 <button class="logout-btn" id="logoutBtn">Вийти</button>
+                <button class="auth-btn secondary" id="profileBtn">Мій профіль</button>
             </div>
+        </div>
+
+        <!-- Модальне вікно профілю (особистий кабінет) -->
+        <div id="profileModal" class="profile-section hidden" style="margin: 20px;">
+            <h2>👤 Мій профіль (редагування)</h2>
+            <div id="profileContent" class="profile-info"></div>
+            <button class="save-profile-btn" id="saveProfileBtn">Зберегти зміни</button>
+            <button class="delete-account-btn" id="deleteOwnAccountBtn">Видалити мій акаунт</button>
+            <button class="auth-btn secondary" id="closeProfileBtn" style="margin-top:10px;">Закрити</button>
         </div>
 
         <div class="tab-bar" id="tabBar">
@@ -903,8 +1039,9 @@
             <button class="tab-button" id="tabAdmin" style="display: none;">👑 Адмін</button>
         </div>
 
-        <!-- ========== ВКЛАДКА ССО ========== -->
+        <!-- Вкладка ССО -->
         <div id="sso-tab" class="tab-content active">
+            <!-- вміст вкладки ССО залишається без змін (скорочено для економії місця) -->
             <div class="nav-chapters">
                 <a href="#sso-real">Що таке ССО</a>
                 <a href="#sso-oboviazky">Обов'язки</a>
@@ -1004,13 +1141,13 @@
                 <h3 style="margin:30px 0 15px; color:#0a2a3a;">🎯 Завдання під час патрулювання (ССО)</h3><ul class="rules-list"><li>Слідкувати за порядком (зупиняти перестрілки, бійки, конфлікти).</li><li>Спасіння жителів.</li><li>Відбивати напади на об'єкти.</li><li>Допомога іншим держструктурам.</li><li>Перевірка підозрілих автомобілів.</li><li><em>За порушення ПДР не зупиняємо!</em></li></ul>
                 <h3 style="margin:30px 0 15px; color:#0a2a3a;">💧 Зони водного патрулювання (ССО)</h3><div class="zone-list"><span class="zone-item">ВЧ</span><span class="zone-item">Київ</span><span class="zone-item">Дніпро</span></div>
                 <h3 style="margin:30px 0 15px; color:#0a2a3a;">📸 Фото морського патрулювання</h3><div class="photo-grid"><img src="https://i.ibb.co/VWvFBzhd/1.jpg" alt="Морський патруль 1"><img src="https://i.ibb.co/kg9Vj16P/2.jpg" alt="Морський патруль 2"><img src="https://i.ibb.co/23ShzYTV/3.jpg" alt="Морський патруль 3"></div></section>
-                <!-- Решта розділів ССО скорочено, але вони присутні -->
                 <div class="note">⚠️ Повна версія статуту ССО містить усі покарання та примітки.</div>
             </div>
         </div>
 
-        <!-- ========== ВКЛАДКА ЗСУ ========== -->
+        <!-- Вкладка ЗСУ (скорочено) -->
         <div id="zsu-tab" class="tab-content">
+            <!-- вміст ЗСУ скорочено для економії місця (залишаємо як є) -->
             <div class="nav-chapters">
                 <a href="#zsu1">1. Загальні</a>
                 <a href="#zsu-prysyaga">Присяга</a>
@@ -1085,7 +1222,6 @@
                         <li><strong>300</strong> – поранений боєць</li>
                     </ul>
                 </section>
-                <!-- Інші розділи ЗСУ (скорочено) -->
                 <section class="chapter" id="zsu2"><h2>2. Техніка армії (ЗСУ)</h2>...</section>
                 <section class="chapter" id="zsu3"><h2>3. Форма (ЗСУ)</h2>...</section>
                 <section class="chapter" id="zsu4"><h2>4. Обов'язки на посту (ЗСУ)</h2>...</section>
@@ -1095,11 +1231,10 @@
                 <section class="chapter" id="zsu8"><h2>8. Правила використання рації</h2>...</section>
                 <section class="chapter" id="zsu9"><h2>9. Блокпости</h2>...</section>
                 <section class="chapter" id="zsu-attack"><h2>⚔️ Правила нападу на військову частину</h2>...</section>
-                <!-- Видалено блок emergency-email -->
             </div>
         </div>
 
-        <!-- Вкладка Вільні місця (оновлено згідно з останнім запитом) -->
+        <!-- Вкладка Вільні місця -->
         <div id="vacancy-tab" class="tab-content">
             <div class="content">
                 <h2>📋 ВІЛЬНІ МІСЦЯ В ПІДРОЗДІЛАХ ССО</h2>
@@ -1108,7 +1243,7 @@
                     <tbody>
                         <tr><td>Начальник ССО</td><td>1/1</td><td class="filled">✓ Зайнято</td></tr>
                         <tr><td>Заступник начальника ССО</td><td>1/1</td><td class="filled">✓ Зайнято</td></tr>
-                        <tr><td>Начальник академії ССО</td><td>1/1</td><td class="filled">✓ Зайнято</td></tr>
+                        <tr><td>Начальник академії ССО</td><td>1/1</td><td class="filled">✓ Зайнято (Діма Бледнов)</td></tr>
                         <tr><td>Заступник начальника академії ССО</td><td>0/1</td><td class="vacant">✗ Вільно</td></tr>
                     </tbody>
                 </table>
@@ -1116,7 +1251,7 @@
             </div>
         </div>
 
-        <!-- Вкладка Склад ССО (гарний формат) -->
+        <!-- Вкладка Склад ССО (оновлено) -->
         <div id="roster-tab" class="tab-content">
             <div class="content">
                 <div class="pre-format">
@@ -1131,37 +1266,36 @@
 • 🜙 Заступник начальника — ВАКАНТНО
 
 🟦 АКАДЕМІЯ ССО
-• 🎖️ Начальник Академії — ВАКАНТНО
+• 🎖️ Начальник Академії — Діма Бледнов
 • 🎖️ Заступник начальника Академії — ВАКАНТНО
 
-ІНСТРУКТОРА ССО
+ ІНСТРУКТОРА ССО
 •  Старший інструктор — ВАКАНТНО
-•  Інструктор — ВАКАНТНО
+•  Інструктор — ВАКАНТНО 
 
 🟨 ОФІЦЕРСЬКИЙ СКЛАД
-• 🪖 Головний офіцер — ВАКАНТНО
+• 🪖 Головний офіцер — Вакантно
+• 🪖 Старший офіцер - Марян Набанов
 • 🪖 Офіцер — Марік Марченко
-• 🪖 Офіцер — Марян Набанов
 
 🟥 БОЙОВИЙ СКЛАД
 • ⚔️ Бієць — Сергій Марчело
-• ⚔️ Бієць — Макс Татаренко
-• ⚔️ Бієць — Діма Бледнов
-• ⚔️ Бієць — Ростислав Рослина
-• ⚔️ Бієць — Ілля Петріс
-• ⚔️ Бієць — Олександр Чичкань
-• ⚔️ Бієць — Денис Епштейнус
-• ⚔️ Бієць — Ярослав Епштейн
+• ⚔️ Бієць — Ілля Петріс 
+• ⚔️ Бієць — Олександр Чичкань 
 • ⚔️ Бієць — Матвій Календа
-• ⚔️ Бієць — Микола Мандрук
+• ⚔️ Бієць — Микола Мандрук 
 • ⚔️ Бієць — Тимофій Буданов
+• ⚔️ Бієць — Дмитро Кувіт
+• ⚔️ Бієць — Матвій Кеннеді
+• ⚔️ Бієць — Макар Лонг
+• ⚔️ Бієць — Дмитро Томащук
+• ⚔️ Бієць — Костянтин Ахметов
 
 НАВЧАЛЬНИЙ СКЛАД
-• 📘 Академік — Ніколас Петріс
-• 📘 Академік — Саша Чушенко
-• 📘 Академік — Олександр Рудненко
-• 📘 Академік — Матвій Кеннеді
+• 📘 Академік — Ніколас Петріс 
 • 📘 Академік — Андрій Олейников
+• 📘 Академік — Андрій Поліщу
+• 📘 Академік — Ілля Петріс
 
 ════════════════════════════════════════════
           🜙 Готовність. Честь. Міць. ССО 🜙
@@ -1227,21 +1361,31 @@
             </div>
         </div>
 
-        <!-- Вкладка Адмін панель з кнопкою оновлення -->
+        <!-- Вкладка Адмін панель -->
         <div id="admin-tab" class="tab-content">
             <div class="content">
                 <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
                     <h2>👑 Адмін панель</h2>
-                    <button onclick="renderAdminPanel()" style="background: #0a2a3a; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-weight: 600;">
-                        <i class="fas fa-sync-alt"></i> Оновити список
+                    <button onclick="window.renderAdminPanel()" style="background: #0a2a3a; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-sync-alt"></i> Оновити
                     </button>
                 </div>
                 <div class="stats" id="adminStats"></div>
+
+                <h3>📋 Користувачі</h3>
                 <table class="admin-table" id="userTable">
                     <thead>
-                        <tr><th>Email</th><th>Нік</th><th>ID</th><th>Звання</th><th>Дискорд</th><th>Ранг</th><th>Дата</th><th>Змінити</th><th>Дія</th></tr>
+                        <tr><th>Email</th><th>Нік</th><th>ID</th><th>Звання</th><th>Дискорд</th><th>Ранг</th><th>Дата</th><th>Змінити ранг</th><th>Дія</th><th>Видалити</th></tr>
                     </thead>
                     <tbody id="userTableBody"></tbody>
+                </table>
+
+                <h3 style="margin-top: 40px;">🎓 Заявки на випуск</h3>
+                <table class="requests-table" id="requestsTable">
+                    <thead>
+                        <tr><th>Ім'я</th><th>Причина</th><th>Теми</th><th>Дата</th><th>Користувач</th><th>Дія</th></tr>
+                    </thead>
+                    <tbody id="requestsTableBody"></tbody>
                 </table>
             </div>
         </div>
@@ -1250,6 +1394,7 @@
             © ССО / ЗСУ | Довідковий матеріал<br>
             Редакція 19.02.2026<br>
             <a href="https://www.tiktok.com/@ccotop1?_r=1&_t=ZS-94834Y4Z02n" target="_blank" class="tiktok-link"><i class="fab fa-tiktok"></i> TikTok</a>
+            <div class="small-greeting">💙 Зроблено з повагою до ССО України</div>
         </footer>
     </div>
 
@@ -1259,6 +1404,7 @@
             const STORAGE_USERS = 'military_users';
             const STORAGE_CURRENT_USER = 'current_user';
             const STORAGE_CARD_NUMBERS = 'card_numbers';
+            const STORAGE_GRAD_REQUESTS = 'graduation_requests';
             const ADMIN_EMAILS = ['CCOTOP1@gmail.com', 'normalnijbot@gmail.com'];
 
             const defaultUsers = [
@@ -1266,6 +1412,7 @@
                 { login: "normalnijbot@gmail.com", password: "b07b1084", rank: "Начальник ССО", registeredAt: Date.now(), nick: "NormalBot", gameId: "2", gameRank: "Начальник ССО", discord: "normal#1234" }
             ];
 
+            // ========== Робота з користувачами ==========
             function loadUsers() {
                 const data = localStorage.getItem(STORAGE_USERS);
                 if (data) return JSON.parse(data);
@@ -1277,6 +1424,8 @@
                 if (user) localStorage.setItem(STORAGE_CURRENT_USER, JSON.stringify(user));
                 else localStorage.removeItem(STORAGE_CURRENT_USER);
             }
+
+            // ========== Картки ==========
             function loadCardNumbers() { const data = localStorage.getItem(STORAGE_CARD_NUMBERS); return data ? JSON.parse(data) : []; }
             function saveCardNumbers(nums) { localStorage.setItem(STORAGE_CARD_NUMBERS, JSON.stringify(nums)); }
 
@@ -1301,64 +1450,132 @@
                 inp.value = '';
             });
 
+            // ========== Заявки на випуск ==========
+            function loadGradRequests() {
+                const data = localStorage.getItem(STORAGE_GRAD_REQUESTS);
+                return data ? JSON.parse(data) : [];
+            }
+            function saveGradRequests(requests) {
+                localStorage.setItem(STORAGE_GRAD_REQUESTS, JSON.stringify(requests));
+            }
+
+            // Додавання заявки
             document.getElementById('graduationSubmitBtn')?.addEventListener('click', () => {
+                const current = loadCurrentUser();
+                if (!current) { alert('Спочатку увійдіть в акаунт'); return; }
                 const name = document.getElementById('gradName').value.trim();
                 const reason = document.getElementById('gradReason').value.trim();
-                const checks = document.querySelectorAll('#graduation-tab .checkbox-group input:checked');
-                if (!name || !reason || checks.length === 0) { alert('Заповніть всі поля і виберіть теми'); return; }
-                alert(`Заявку подано!\nІм'я: ${name}\nПричина: ${reason}\nТем: ${checks.length}`);
+                const checkboxes = document.querySelectorAll('#graduation-tab .checkbox-group input:checked');
+                const topics = Array.from(checkboxes).map(cb => cb.id);
+                if (!name || !reason || topics.length === 0) { alert('Заповніть всі поля і виберіть теми'); return; }
+
+                const requests = loadGradRequests();
+                const newRequest = {
+                    id: Date.now(),
+                    userName: name,
+                    reason: reason,
+                    topics: topics,
+                    date: new Date().toLocaleString(),
+                    userLogin: current.login
+                };
+                requests.push(newRequest);
+                saveGradRequests(requests);
+
+                alert('Заявку подано!');
                 document.getElementById('gradName').value = '';
                 document.getElementById('gradReason').value = '';
-                checks.forEach(c => c.checked = false);
+                checkboxes.forEach(c => c.checked = false);
             });
 
-            function updateAuthUI() {
-                const u = loadCurrentUser();
-                const authForm = document.getElementById('authForm');
-                const authButtons = document.getElementById('authButtons');
-                const authMsg = document.getElementById('authMessage');
-                const userInfo = document.getElementById('userInfo');
-                const userName = document.getElementById('userNameDisplay');
-                const tabAdmin = document.getElementById('tabAdmin');
+            // Видалення заявки (адмін)
+            window.deleteGradRequest = function(id) {
+                let requests = loadGradRequests();
+                requests = requests.filter(r => r.id !== id);
+                saveGradRequests(requests);
+                renderAdminPanel(); // оновлюємо адмін-панель
+            };
 
-                if (u) {
-                    authForm.style.display = 'none';
-                    authButtons.style.display = 'none';
-                    userInfo.style.display = 'flex';
-                    userName.textContent = `👤 ${u.login} (${u.rank})`;
-                    authMsg.style.display = 'none';
-                    if (ADMIN_EMAILS.includes(u.login)) tabAdmin.style.display = 'inline-block';
-                    else { tabAdmin.style.display = 'none'; if (tabAdmin.classList.contains('active')) document.getElementById('tabSSO').click(); }
-                } else {
-                    authForm.style.display = 'flex';
-                    authButtons.style.display = 'flex';
-                    userInfo.style.display = 'none';
-                    authMsg.style.display = 'block';
-                    authMsg.textContent = '👋 Ви не авторизовані';
-                    tabAdmin.style.display = 'none';
-                    if (tabAdmin.classList.contains('active')) document.getElementById('tabSSO').click();
-                }
-                if (u && ADMIN_EMAILS.includes(u.login)) renderAdminPanel();
+            // ========== Профіль та редагування ==========
+            function showProfile() {
+                const current = loadCurrentUser();
+                if (!current) return;
+                const users = loadUsers();
+                const fullUser = users.find(u => u.login === current.login);
+                if (!fullUser) return;
+
+                const profileContent = document.getElementById('profileContent');
+                profileContent.innerHTML = `
+                    <div class="profile-field"><span>Email:</span> ${fullUser.login}</div>
+                    <div class="profile-field">
+                        <span>Нік в грі:</span>
+                        <input type="text" id="editNick" value="${fullUser.nick || ''}">
+                    </div>
+                    <div class="profile-field">
+                        <span>ID в грі:</span>
+                        <input type="text" id="editGameId" value="${fullUser.gameId || ''}">
+                    </div>
+                    <div class="profile-field">
+                        <span>Звання:</span>
+                        <input type="text" id="editGameRank" value="${fullUser.gameRank || ''}">
+                    </div>
+                    <div class="profile-field">
+                        <span>Дискорд:</span>
+                        <input type="text" id="editDiscord" value="${fullUser.discord || ''}">
+                    </div>
+                    <div class="profile-field"><span>Ранг на сайті:</span> ${fullUser.rank}</div>
+                    <div class="profile-field"><span>Дата реєстрації:</span> ${new Date(fullUser.registeredAt).toLocaleString()}</div>
+                `;
+                document.getElementById('profileModal').classList.remove('hidden');
             }
 
-            function register(login, pass, nick, gid, gr, disc) {
+            function saveProfile() {
+                const current = loadCurrentUser();
+                if (!current) return;
                 const users = loadUsers();
-                if (users.find(u => u.login === login)) { alert('Email вже є'); return false; }
-                users.push({ login, password: pass, rank: 'Академік', registeredAt: Date.now(), nick: nick || '—', gameId: gid || '—', gameRank: gr || '—', discord: disc || '—' });
+                const index = users.findIndex(u => u.login === current.login);
+                if (index === -1) return;
+
+                // Оновлюємо поля
+                users[index].nick = document.getElementById('editNick')?.value || '';
+                users[index].gameId = document.getElementById('editGameId')?.value || '';
+                users[index].gameRank = document.getElementById('editGameRank')?.value || '';
+                users[index].discord = document.getElementById('editDiscord')?.value || '';
+
                 saveUsers(users);
-                alert('Реєстрація успішна!');
-                return true;
+                alert('Профіль оновлено');
+                // Оновлюємо поточну сесію (ранг може не змінитись, але ми не зберігаємо інші поля в current)
+                saveCurrentUser({ login: current.login, rank: users[index].rank });
+                closeProfileModal();
             }
 
-            function login(login, pass) {
-                const users = loadUsers();
-                const u = users.find(u => u.login === login && u.password === pass);
-                if (u) { saveCurrentUser({ login: u.login, rank: u.rank }); updateAuthUI(); return true; }
-                else { alert('Невірні дані'); return false; }
+            function closeProfileModal() {
+                document.getElementById('profileModal').classList.add('hidden');
             }
 
-            function logout() { saveCurrentUser(null); updateAuthUI(); }
+            // Видалення акаунта
+            function deleteAccount(login) {
+                if (!confirm(`Ви дійсно хочете видалити акаунт ${login}?`)) return;
+                let users = loadUsers();
+                users = users.filter(u => u.login !== login);
+                saveUsers(users);
+                const current = loadCurrentUser();
+                if (current && current.login === login) {
+                    saveCurrentUser(null);
+                }
+                updateAuthUI();
+                if (document.getElementById('admin-tab').classList.contains('active') && loadCurrentUser() && ADMIN_EMAILS.includes(loadCurrentUser().login)) {
+                    renderAdminPanel();
+                }
+            }
 
+            function deleteOwnAccount() {
+                const current = loadCurrentUser();
+                if (!current) return;
+                deleteAccount(current.login);
+                closeProfileModal();
+            }
+
+            // ========== Рендер адмін-панелі ==========
             function renderAdminPanel() {
                 const users = loadUsers();
                 const tbody = document.getElementById('userTableBody');
@@ -1366,11 +1583,42 @@
                 tbody.innerHTML = '';
                 users.forEach((u, i) => {
                     const row = document.createElement('tr');
-                    row.innerHTML = `<td>${u.login}</td><td>${u.nick || ''}</td><td>${u.gameId || ''}</td><td>${u.gameRank || ''}</td><td>${u.discord || ''}</td><td>${u.rank}</td><td>${new Date(u.registeredAt).toLocaleString()}</td><td><select id="rank-${i}">${RANKS.map(r => `<option ${r===u.rank?'selected':''}>${r}</option>`).join('')}</select></td><td><button onclick="updateUserRank(${i})">Зберегти</button></td>`;
+                    row.innerHTML = `
+                        <td>${u.login}</td>
+                        <td>${u.nick || ''}</td>
+                        <td>${u.gameId || ''}</td>
+                        <td>${u.gameRank || ''}</td>
+                        <td>${u.discord || ''}</td>
+                        <td>${u.rank}</td>
+                        <td>${new Date(u.registeredAt).toLocaleString()}</td>
+                        <td><select id="rank-${i}">${RANKS.map(r => `<option ${r===u.rank?'selected':''}>${r}</option>`).join('')}</select></td>
+                        <td><button onclick="updateUserRank(${i})">Зберегти</button></td>
+                        <td><button onclick="deleteAccount('${u.login}')" style="background:#a12a2a;">🗑️</button></td>
+                    `;
                     tbody.appendChild(row);
                 });
+
                 const stats = document.getElementById('adminStats');
                 if (stats) stats.innerHTML = `<div class="stat-card"><strong>Всього:</strong> ${users.length}</div>`;
+
+                // Рендер заявок на випуск
+                const requests = loadGradRequests();
+                const reqTbody = document.getElementById('requestsTableBody');
+                if (reqTbody) {
+                    reqTbody.innerHTML = '';
+                    requests.forEach(req => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${req.userName}</td>
+                            <td>${req.reason}</td>
+                            <td>${req.topics.join(', ')}</td>
+                            <td>${req.date}</td>
+                            <td>${req.userLogin}</td>
+                            <td><button onclick="deleteGradRequest(${req.id})">Опрацьовано</button></td>
+                        `;
+                        reqTbody.appendChild(row);
+                    });
+                }
             }
 
             window.updateUserRank = function(index) {
@@ -1379,29 +1627,130 @@
                 users[index].rank = sel.value;
                 saveUsers(users);
                 const cur = loadCurrentUser();
-                if (cur && cur.login === users[index].login) { cur.rank = sel.value; saveCurrentUser(cur); updateAuthUI(); }
+                if (cur && cur.login === users[index].login) {
+                    cur.rank = sel.value;
+                    saveCurrentUser(cur);
+                    updateAuthUI();
+                }
                 renderAdminPanel();
                 alert('Ранг оновлено');
             };
 
-            document.getElementById('loginBtn')?.addEventListener('click', () => {
-                const l = document.getElementById('loginName').value.trim();
-                const p = document.getElementById('loginPass').value.trim();
-                if (l && p) login(l, p); else alert('Введіть email/пароль');
-            });
-            document.getElementById('registerBtn')?.addEventListener('click', () => {
-                const l = document.getElementById('loginName').value.trim();
-                const p = document.getElementById('loginPass').value.trim();
-                const n = document.getElementById('regNick').value.trim();
-                const g = document.getElementById('regGameId').value.trim();
-                const r = document.getElementById('regRank').value.trim();
-                const d = document.getElementById('regDiscord').value.trim();
-                if (!l || !p) { alert('Email та пароль обов\'язкові'); return; }
-                register(l, p, n, g, r, d);
-            });
-            document.getElementById('logoutBtn')?.addEventListener('click', logout);
+            // ========== UI авторизації ==========
+            function updateAuthUI() {
+                const current = loadCurrentUser();
+                const authChoice = document.getElementById('authChoice');
+                const loginForm = document.getElementById('loginForm');
+                const registerForm = document.getElementById('registerForm');
+                const userInfoDiv = document.getElementById('userInfo');
+                const userNameSpan = document.getElementById('userNameDisplay');
+                const tabAdmin = document.getElementById('tabAdmin');
 
-            // Tab switching
+                if (current) {
+                    authChoice.classList.add('hidden');
+                    loginForm.classList.add('hidden');
+                    registerForm.classList.add('hidden');
+                    userInfoDiv.classList.remove('hidden');
+                    userNameSpan.textContent = `👤 ${current.login} (${current.rank})`;
+                    if (ADMIN_EMAILS.includes(current.login)) {
+                        tabAdmin.style.display = 'inline-block';
+                    } else {
+                        tabAdmin.style.display = 'none';
+                        if (document.getElementById('admin-tab').classList.contains('active')) {
+                            document.getElementById('tabSSO').click();
+                        }
+                    }
+                    if (ADMIN_EMAILS.includes(current.login) && document.getElementById('admin-tab').classList.contains('active')) {
+                        renderAdminPanel();
+                    }
+                } else {
+                    authChoice.classList.remove('hidden');
+                    loginForm.classList.add('hidden');
+                    registerForm.classList.add('hidden');
+                    userInfoDiv.classList.add('hidden');
+                    tabAdmin.style.display = 'none';
+                }
+            }
+
+            // ========== Ініціалізація подій ==========
+            document.getElementById('showLoginBtn').addEventListener('click', () => {
+                document.getElementById('authChoice').classList.add('hidden');
+                document.getElementById('loginForm').classList.remove('hidden');
+            });
+
+            document.getElementById('showRegisterBtn').addEventListener('click', () => {
+                document.getElementById('authChoice').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+            });
+
+            document.getElementById('backFromLogin').addEventListener('click', () => {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('authChoice').classList.remove('hidden');
+            });
+
+            document.getElementById('backFromRegister').addEventListener('click', () => {
+                document.getElementById('registerForm').classList.add('hidden');
+                document.getElementById('authChoice').classList.remove('hidden');
+            });
+
+            document.getElementById('doLoginBtn').addEventListener('click', () => {
+                const email = document.getElementById('loginEmail').value.trim();
+                const pass = document.getElementById('loginPassword').value.trim();
+                const users = loadUsers();
+                const user = users.find(u => u.login === email && u.password === pass);
+                if (user) {
+                    saveCurrentUser({ login: user.login, rank: user.rank });
+                    updateAuthUI();
+                } else {
+                    alert('Невірний email або пароль');
+                }
+            });
+
+            document.getElementById('doRegisterBtn').addEventListener('click', () => {
+                const email = document.getElementById('regEmail').value.trim();
+                const pass = document.getElementById('regPassword').value.trim();
+                const nick = document.getElementById('regNick').value.trim();
+                const gameId = document.getElementById('regGameId').value.trim();
+                const gameRank = document.getElementById('regGameRank').value.trim();
+                const discord = document.getElementById('regDiscord').value.trim();
+
+                if (!email || !pass) {
+                    alert('Email та пароль обов\'язкові');
+                    return;
+                }
+                const users = loadUsers();
+                if (users.find(u => u.login === email)) {
+                    alert('Користувач з таким email вже існує');
+                    return;
+                }
+                const newUser = {
+                    login: email,
+                    password: pass,
+                    rank: 'Академік',
+                    registeredAt: Date.now(),
+                    nick: nick || '—',
+                    gameId: gameId || '—',
+                    gameRank: gameRank || '—',
+                    discord: discord || '—'
+                };
+                users.push(newUser);
+                saveUsers(users);
+                alert('Реєстрація успішна! Тепер ви можете увійти.');
+                document.getElementById('registerForm').classList.add('hidden');
+                document.getElementById('authChoice').classList.remove('hidden');
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                saveCurrentUser(null);
+                updateAuthUI();
+            });
+
+            document.getElementById('profileBtn').addEventListener('click', showProfile);
+            document.getElementById('closeProfileBtn').addEventListener('click', closeProfileModal);
+            document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
+            document.getElementById('deleteOwnAccountBtn').addEventListener('click', deleteOwnAccount);
+
+            // ========== Перемикання вкладок ==========
             const tabs = ['SSO','ZSU','Vacancy','Roster','Honor','Graduation','Admin'];
             const btns = {}, conts = {};
             tabs.forEach(t => { btns[t] = document.getElementById(`tab${t}`); conts[t] = document.getElementById(`${t.toLowerCase()}-tab`); });
@@ -1416,7 +1765,7 @@
                 });
             });
 
-            // Dark mode
+            // ========== Темний режим ==========
             const themeBtn = document.getElementById('themeButton');
             themeBtn.addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
@@ -1428,10 +1777,33 @@
                 themeBtn.innerHTML = '☀️ Світлий';
             }
 
-            // Make renderAdminPanel globally accessible for the refresh button
-            window.renderAdminPanel = renderAdminPanel;
+            // ========== Пошук ==========
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                const text = e.target.value.toLowerCase();
+                const activeTab = document.querySelector('.tab-content.active');
+                if (!activeTab) return;
+                const elements = activeTab.querySelectorAll('p, li, h2, h3, .code-example, .pre-format, td');
+                elements.forEach(el => {
+                    const content = el.textContent.toLowerCase();
+                    el.style.backgroundColor = content.includes(text) && text.length > 0 ? '#ffffaa' : '';
+                });
+            });
 
-            // Init
+            // Глобальні функції для виклику з HTML
+            window.renderAdminPanel = renderAdminPanel;
+            window.deleteAccount = deleteAccount;
+            window.deleteGradRequest = deleteGradRequest;
+
+            // Автооновлення адмін-панелі кожні 5 сек
+            setInterval(() => {
+                const cur = loadCurrentUser();
+                const adminActive = document.getElementById('admin-tab').classList.contains('active');
+                if (cur && ADMIN_EMAILS.includes(cur.login) && adminActive) {
+                    renderAdminPanel();
+                }
+            }, 5000);
+
+            // Початкове завантаження
             window.addEventListener('DOMContentLoaded', () => {
                 updateAuthUI();
                 renderCardList();
